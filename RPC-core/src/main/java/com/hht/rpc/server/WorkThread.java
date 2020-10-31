@@ -1,5 +1,6 @@
 package com.hht.rpc.server;
 
+import com.hht.rpc.registry.ServerRegistry;
 import domain.ResponseCode;
 import domain.RpcRequest;
 import domain.RpcResponse;
@@ -20,11 +21,14 @@ public class WorkThread implements Runnable {
 
     private Socket socket;
 
-    private Object service;
+    private final ServerRegistry registry;
 
-    public WorkThread(Socket socket,Object service){
+    private final RequestHandler handler;
+
+    public WorkThread(Socket socket,ServerRegistry registry,RequestHandler handler){
         this.socket=socket;
-        this.service=service;
+        this.registry=registry;
+        this.handler=handler;
     }
 
     /**
@@ -38,11 +42,11 @@ public class WorkThread implements Runnable {
              ObjectInputStream inputStream=new ObjectInputStream(socket.getInputStream())){
             RpcRequest request=(RpcRequest) inputStream.readObject();
             //反射调用方法并返回对象,然后序列化写入输出流
-            Method method=service.getClass().getMethod(request.getMethodName(),request.getParameterTypes());
-            Object res = method.invoke(service, request.getParameters());
-            outputStream.writeObject(RpcResponse.success(res));
+            Object service = registry.getServer(request.getInterfaceName());
+            RpcResponse res = handler.handle(request,service);
+            outputStream.writeObject(res);
             outputStream.flush();
-        } catch (IOException | ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+        } catch (IOException | ClassNotFoundException e) {
             log.warn("调用服务失败！");
         }
     }

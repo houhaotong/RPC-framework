@@ -1,6 +1,8 @@
 package com.hht.test;
 
 import com.hht.rpc.HelloService;
+import com.hht.rpc.registry.DefaultServerRegistry;
+import com.hht.rpc.registry.ServerRegistry;
 import com.hht.rpc.server.RpcServer;
 
 /**
@@ -12,6 +14,8 @@ public class testServer {
     public static void main(String[] args) {
         RpcServer server=new RpcServer();
         HelloService service=new HelloServiceImpl();
-        server.register(service,8888);
+        ServerRegistry registry=new DefaultServerRegistry();
+        registry.register(service);
+        server.start(registry,8888);
     }
 }

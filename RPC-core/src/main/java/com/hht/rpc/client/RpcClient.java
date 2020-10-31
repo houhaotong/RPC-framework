@@ -20,7 +20,7 @@ public class RpcClient {
             ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());
             ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
             log.info("发送请求");
-            //序列化request请求对象到输出流，并强制输出
+            //序列化request请求对象到输出流，并强、制输出
             outputStream.writeObject(request);
             outputStream.flush();
             //从输入流中读取服务端所写入的对象

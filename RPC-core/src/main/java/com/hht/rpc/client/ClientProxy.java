@@ -1,7 +1,9 @@
 package com.hht.rpc.client;
 
+import domain.RpcError;
 import domain.RpcRequest;
 import domain.RpcResponse;
+import exception.RpcException;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -35,6 +37,9 @@ public class ClientProxy implements InvocationHandler {
                 .build();
         RpcClient client=new RpcClient();
         RpcResponse response = (RpcResponse) client.sendRequest(rpcRequest, host, port);
+        if(response==null){
+            throw new RpcException(RpcError.BAD_SERVER);
+        }
         return response.getData();
     }
 }

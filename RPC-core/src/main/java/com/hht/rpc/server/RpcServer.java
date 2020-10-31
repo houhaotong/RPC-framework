@@ -1,5 +1,6 @@
 package com.hht.rpc.server;
 
+import com.hht.rpc.registry.ServerRegistry;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -34,17 +35,17 @@ public class RpcServer {
     }
 
     /**
-     * 注册服务到指定端口
-     * @param service 需要被注册的服务
+     * 开启服务
+     * @param registry 注册的服务表
      * @param port 端口号
      */
-    public void register(Object service,int port){
+    public void start(ServerRegistry registry, int port){
         try(ServerSocket serverSocket=new ServerSocket(port)){
             log.info("服务器等待连接.....");
             Socket socket;
             while ((socket=serverSocket.accept())!=null){
                 log.info("连接成功！客户端ip为:"+socket.getInetAddress());
-                threadPool.execute(new WorkThread(socket,service));
+                threadPool.execute(new WorkThread(socket,registry,new RequestHandler()));
             }
         }catch (IOException e){
             log.warn("连接发生错误！");

@@ -9,7 +9,8 @@ public enum ResponseCode {
     SUCCESS(200,"成功"),
     FAIL(400,"失败"),
     NOT_FOUND_METHOD(500,"未找到指定方法"),
-    NOT_FOUND_CLASS(501,"未找到对应实现类");
+    NOT_FOUND_CLASS(501,"未找到对应实现类"),
+    BAD_INVOKE(401,"方法调用失败");
 
     ResponseCode(Integer code,String message){
         this.code=code;
