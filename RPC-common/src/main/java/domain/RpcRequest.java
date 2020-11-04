@@ -24,6 +24,9 @@ public class RpcRequest implements Serializable {
     /** 传递的参数列表 */
     private Class<?>[] parameterTypes;
 
+    private RpcRequest(){
+
+    }
     private RpcRequest(Builder builder){
         this.interfaceName=builder.interfaceName;
         this.methodName=builder.methodName;

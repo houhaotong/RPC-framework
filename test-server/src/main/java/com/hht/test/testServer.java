@@ -4,6 +4,8 @@ import com.hht.rpc.HelloService;
 import com.hht.rpc.registry.DefaultServerRegistry;
 import com.hht.rpc.registry.ServerRegistry;
 import com.hht.rpc.server.RpcServer;
+import com.hht.rpc.server.netty.NettyServer;
+import com.hht.rpc.server.socket.SocketServer;
 
 /**
  * @author hht
@@ -12,7 +14,7 @@ import com.hht.rpc.server.RpcServer;
 public class testServer {
 
     public static void main(String[] args) {
-        RpcServer server=new RpcServer();
+        RpcServer server=new NettyServer();
         HelloService service=new HelloServiceImpl();
         ServerRegistry registry=new DefaultServerRegistry();
         registry.register(service);

@@ -1,14 +1,12 @@
-package com.hht.rpc.server;
+package com.hht.rpc.server.socket;
 
 import com.hht.rpc.registry.ServerRegistry;
-import domain.ResponseCode;
+import com.hht.rpc.server.RequestHandler;
 import domain.RpcRequest;
 import domain.RpcResponse;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.Socket;
 
 /**
@@ -42,7 +40,7 @@ public class WorkThread implements Runnable {
              ObjectInputStream inputStream=new ObjectInputStream(socket.getInputStream())){
             RpcRequest request=(RpcRequest) inputStream.readObject();
             //反射调用方法并返回对象,然后序列化写入输出流
-            Object service = registry.getServer(request.getInterfaceName());
+            Object service = registry.getService(request.getInterfaceName());
             RpcResponse res = handler.handle(request,service);
             outputStream.writeObject(res);
             outputStream.flush();

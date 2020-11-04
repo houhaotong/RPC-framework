@@ -1,6 +1,6 @@
 package com.hht.rpc.server;
 
-import domain.ResponseCode;
+import enums.ResponseCode;
 import domain.RpcRequest;
 import domain.RpcResponse;
 import lombok.extern.slf4j.Slf4j;

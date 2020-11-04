@@ -1,5 +1,6 @@
 package domain;
 
+import enums.ResponseCode;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -23,7 +24,7 @@ public class RpcResponse<T> implements Serializable {
 
     public static <T>RpcResponse<T> success(T data){
         RpcResponse<T> response=new RpcResponse<>();
-        response.message=ResponseCode.SUCCESS.getMessage();
+        response.message= ResponseCode.SUCCESS.getMessage();
         response.code=ResponseCode.SUCCESS.getCode();
         response.data=data;
         return response;

@@ -1,6 +1,6 @@
 package exception;
 
-import domain.RpcError;
+import enums.RpcError;
 
 /**
  * @author hht

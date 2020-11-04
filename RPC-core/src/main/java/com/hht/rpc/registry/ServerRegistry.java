@@ -18,5 +18,5 @@ public interface ServerRegistry {
      * @param serverName 服务名
      * @return 服务实体
      */
-    public Object getServer(String serverName);
+    public Object getService(String serverName);
 }

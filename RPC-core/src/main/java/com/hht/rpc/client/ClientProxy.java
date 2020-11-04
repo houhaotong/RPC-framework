@@ -1,6 +1,6 @@
 package com.hht.rpc.client;
 
-import domain.RpcError;
+import enums.RpcError;
 import domain.RpcRequest;
 import domain.RpcResponse;
 import exception.RpcException;
@@ -18,10 +18,12 @@ public class ClientProxy implements InvocationHandler {
 
     private String host;
     private Integer port;
+    private RpcClient client;
 
-    public ClientProxy(String host,Integer port){
+    public ClientProxy(String host,Integer port,RpcClient client){
         this.host=host;
         this.port=port;
+        this.client=client;
     }
     @SuppressWarnings("unchecked")
     public <T> T getProxy(Class<T> clazz){
@@ -35,7 +37,6 @@ public class ClientProxy implements InvocationHandler {
                 .parameters(args)
                 .parameterTypes(method.getParameterTypes())
                 .build();
-        RpcClient client=new RpcClient();
         RpcResponse response = (RpcResponse) client.sendRequest(rpcRequest, host, port);
         if(response==null){
             throw new RpcException(RpcError.BAD_SERVER);

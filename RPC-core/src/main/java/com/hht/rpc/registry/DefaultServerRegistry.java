@@ -1,6 +1,6 @@
 package com.hht.rpc.registry;
 
-import domain.RpcError;
+import enums.RpcError;
 import exception.RpcException;
 
 import java.util.HashSet;
@@ -14,28 +14,28 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class DefaultServerRegistry implements ServerRegistry {
 
-    /** 存储服务,key为这个服务所实现的接口 */
-    private final Map<String, Object> serviceMap =new ConcurrentHashMap<>();
+    /** 存储服务,key为这个服务所实现的接口，设置为静态变量，在全局范围内使用 */
+    private static final Map<String, Object> SERVICE_MAP =new ConcurrentHashMap<>();
     /** 用于存放注册过的服务 */
-    private final Set<String> registeredServer=new HashSet<>();
+    private static final Set<String> REGISTERED_SERVER =new HashSet<>();
 
     @Override
     public <T> void register(T server) {
         String serverName = server.getClass().getCanonicalName();
-        if(registeredServer.add(serverName)){
+        if(REGISTERED_SERVER .add(serverName)){
             Class<?>[] interfaces = server.getClass().getInterfaces();
             if(interfaces.length==0){
                 throw new RpcException(RpcError.NOT_IMPLEMENTS_INTERFACES);
             }
             for(Class<?> i:interfaces){
-                serviceMap.put(i.getCanonicalName(),server);
+                SERVICE_MAP.put(i.getCanonicalName(),server);
             }
         }
     }
 
     @Override
-    public Object getServer(String serverName) {
-        Object o = serviceMap.get(serverName);
+    public Object getService(String serverName) {
+        Object o = SERVICE_MAP.get(serverName);
         if (o==null){
             throw new RpcException(RpcError.NOT_FOUND);
         }
