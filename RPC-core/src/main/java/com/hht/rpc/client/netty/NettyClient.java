@@ -32,8 +32,7 @@ public class NettyClient implements RpcClient {
             ch.closeFuture().sync();
             //从channel中获取response的值
             AttributeKey<RpcResponse> key=AttributeKey.valueOf("rpcResponse");
-            RpcResponse response = ch.attr(key).get();
-            return response;
+            return ch.attr(key).get();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {

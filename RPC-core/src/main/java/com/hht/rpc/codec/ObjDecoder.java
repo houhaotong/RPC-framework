@@ -1,6 +1,8 @@
 package com.hht.rpc.codec;
 
+import com.hht.rpc.serializer.CommonSerializer;
 import com.hht.rpc.serializer.JsonSerializer;
+import com.hht.rpc.serializer.KryoSerializer;
 import domain.RpcRequest;
 import domain.RpcResponse;
 import enums.PackageCode;
@@ -22,7 +24,7 @@ public class ObjDecoder extends ByteToMessageDecoder {
 
     private static final int ENCODE_PWD = 0xDDD5232A;
 
-    private final JsonSerializer serializer=new JsonSerializer();
+    private CommonSerializer serializer;
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
         if(in.readableBytes()<4){
@@ -32,6 +34,14 @@ public class ObjDecoder extends ByteToMessageDecoder {
         if (pwd!=ENCODE_PWD){
             log.error("---不支持的数据包");
             throw new RpcException(RpcError.PACKAGE_NOT_SUPPORT);
+        }
+        int serializerCode=in.readInt();
+        if(serializerCode==1){
+            serializer=new JsonSerializer();
+        }if(serializerCode==2){
+            serializer=new KryoSerializer();
+        }else{
+            log.error("---decode错误",new RpcException(RpcError.NOT_FOUND_SERIALIZER));
         }
         int packageCode = in.readInt();
         Class<?> clazz;
