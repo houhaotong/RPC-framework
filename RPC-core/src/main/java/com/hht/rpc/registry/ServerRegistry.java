@@ -1,22 +1,26 @@
 package com.hht.rpc.registry;
 
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+
 /**
+ * 注册中心
  * @author hht
- * @date 2020/10/30 22:29
+ * @date 2020/11/6 23:23
  */
 public interface ServerRegistry {
 
     /**
-     * 注册服务进服务map
-     * @param server 服务实体
-     * @param <T> 服务类型
+     * 注册服务
+     * @param serviceName 服务名称
+     * @param serviceAddress 服务提供地址
      */
-    public <T> void register(T server);
+    public void register(String serviceName, InetSocketAddress serviceAddress);
 
     /**
-     * 根据服务名获取服务
-     * @param serverName 服务名
-     * @return 服务实体
+     * 服务发现
+     * @param serviceName 服务名称
+     * @return 服务地址
      */
-    public Object getService(String serverName);
+    public InetSocketAddress discover(String serviceName);
 }

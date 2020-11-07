@@ -1,6 +1,8 @@
 package com.hht.rpc.server;
 
-import com.hht.rpc.registry.ServerRegistry;
+import com.hht.rpc.provider.ServiceProvider;
+
+import java.net.InetSocketAddress;
 
 /**
  * @author hht
@@ -8,5 +10,7 @@ import com.hht.rpc.registry.ServerRegistry;
  */
 public interface RpcServer {
 
-    public void start(ServerRegistry registry,int port);
+    public void start();
+
+    public void publishService(Object service,Class<?> serviceClazz);
 }

@@ -1,7 +1,7 @@
 package com.hht.rpc.server.netty;
 
-import com.hht.rpc.registry.DefaultServerRegistry;
-import com.hht.rpc.registry.ServerRegistry;
+import com.hht.rpc.provider.ServiceProviderImpl;
+import com.hht.rpc.provider.ServiceProvider;
 import com.hht.rpc.server.RequestHandler;
 import domain.RpcRequest;
 import domain.RpcResponse;
@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class NettyServerHandler extends SimpleChannelInboundHandler<RpcRequest> {
 
-    private final ServerRegistry registry=new DefaultServerRegistry();
+    private final ServiceProvider registry=new ServiceProviderImpl();
     private final RequestHandler handler=new RequestHandler();
 
     @Override

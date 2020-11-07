@@ -1,6 +1,7 @@
 package com.hht.rpc.server.socket;
 
-import com.hht.rpc.registry.ServerRegistry;
+import com.hht.rpc.provider.ServiceProvider;
+import com.hht.rpc.provider.ServiceProviderImpl;
 import com.hht.rpc.server.RequestHandler;
 import com.hht.rpc.server.RpcServer;
 import lombok.extern.slf4j.Slf4j;
@@ -8,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.security.Provider;
 import java.util.concurrent.*;
 
 /**
@@ -20,8 +22,16 @@ public class SocketServer implements RpcServer {
 
     private final ExecutorService threadPool;
 
+    private final String host;
+
+    private final int port;
+
+    private final ServiceProvider provider=new ServiceProviderImpl();
+
     /** 初始化线程池 */
-    public SocketServer(){
+    public SocketServer(String host,int port){
+        this.host=host;
+        this.port=port;
         //线程数
         int corePoolSize=5;
         //最大允许线程数
@@ -38,20 +48,23 @@ public class SocketServer implements RpcServer {
 
     /**
      * 开启服务
-     * @param registry 注册的服务表
-     * @param port 端口号
      */
     @Override
-    public void start(ServerRegistry registry, int port){
+    public void start(){
         try(ServerSocket serverSocket=new ServerSocket(port)){
             log.info("服务器等待连接.....");
             Socket socket;
             while ((socket=serverSocket.accept())!=null){
                 log.info("连接成功！客户端ip为:"+socket.getInetAddress());
-                threadPool.execute(new WorkThread(socket,registry,new RequestHandler()));
+                threadPool.execute(new WorkThread(socket,provider,new RequestHandler()));
             }
         }catch (IOException e){
             log.warn("连接发生错误！");
         }
+    }
+
+    @Override
+    public void publishService(Object service,Class<?> serviceClazz) {
+        provider.addService(service);
     }
 }

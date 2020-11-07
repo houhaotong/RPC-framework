@@ -1,11 +1,14 @@
 package com.hht.rpc.client.socket;
 
 import com.hht.rpc.client.RpcClient;
+import com.hht.rpc.registry.ServerRegistry;
+import com.hht.rpc.registry.ZookeeperServerRegistry;
 import domain.RpcRequest;
 import domain.RpcResponse;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 
 /**
@@ -15,8 +18,13 @@ import java.net.Socket;
 @Slf4j
 public class SocketClient implements RpcClient {
 
+    private final ServerRegistry registry=new ZookeeperServerRegistry();
+
     @Override
-    public Object sendRequest(RpcRequest request, String host, int port){
+    public Object sendRequest(RpcRequest request){
+        InetSocketAddress address = registry.discover(request.getInterfaceName());
+        String host = address.getHostName();
+        int port=address.getPort();
         //通过socket与服务端建立连接
         try (Socket socket=new Socket(host, port)){
             ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());

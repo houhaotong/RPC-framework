@@ -1,4 +1,4 @@
-package com.hht.rpc.registry;
+package com.hht.rpc.provider;
 
 import enums.RpcError;
 import exception.RpcException;
@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author hht
  * @date 2020/10/30 22:43
  */
-public class DefaultServerRegistry implements ServerRegistry {
+public class ServiceProviderImpl implements ServiceProvider {
 
     /** 存储服务,key为这个服务所实现的接口，设置为静态变量，在全局范围内使用 */
     private static final Map<String, Object> SERVICE_MAP =new ConcurrentHashMap<>();
@@ -20,7 +20,7 @@ public class DefaultServerRegistry implements ServerRegistry {
     private static final Set<String> REGISTERED_SERVER =new HashSet<>();
 
     @Override
-    public <T> void register(T server) {
+    public <T> void addService(T server) {
         String serverName = server.getClass().getCanonicalName();
         if(REGISTERED_SERVER .add(serverName)){
             Class<?>[] interfaces = server.getClass().getInterfaces();

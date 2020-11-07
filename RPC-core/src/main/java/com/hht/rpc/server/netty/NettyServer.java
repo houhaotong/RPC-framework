@@ -1,22 +1,21 @@
 package com.hht.rpc.server.netty;
 
+import com.hht.rpc.provider.ServiceProvider;
+import com.hht.rpc.provider.ServiceProviderImpl;
 import com.hht.rpc.registry.ServerRegistry;
+import com.hht.rpc.registry.ZookeeperServerRegistry;
 import com.hht.rpc.server.RpcServer;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.LoggerFactory;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.net.InetSocketAddress;
 
 /**
  * @author hht
@@ -25,9 +24,21 @@ import java.util.logging.Logger;
 @Slf4j
 public class NettyServer implements RpcServer {
 
-    @Override
-    public void start(ServerRegistry registry, int port) {
+    private final ServerRegistry serverRegistry=new ZookeeperServerRegistry();
 
+    private final int port;
+
+    private final String host;
+
+    private final ServiceProvider provider=new ServiceProviderImpl();
+
+    public NettyServer(String host,int port){
+        this.host=host;
+        this.port=port;
+    }
+
+    @Override
+    public void start() {
         EventLoopGroup boss = new NioEventLoopGroup();
         EventLoopGroup worker = new NioEventLoopGroup();
         ServerBootstrap b=new ServerBootstrap();
@@ -47,5 +58,17 @@ public class NettyServer implements RpcServer {
             boss.shutdownGracefully();
             worker.shutdownGracefully();
         }
+    }
+
+    /**
+     * 推送服务
+     * @param service 服务
+     */
+    @Override
+    public void publishService(Object service,Class<?> serviceClazz) {
+        //添加服务
+        provider.addService(service);
+        //注册服务到注册中心
+        serverRegistry.register(serviceClazz.getCanonicalName(),new InetSocketAddress(host,port));
     }
 }

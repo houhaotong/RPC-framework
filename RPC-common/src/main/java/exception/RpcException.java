@@ -14,4 +14,7 @@ public class RpcException extends RuntimeException {
     public RpcException(RpcError error){
         super(error.getMessage());
     }
+    public RpcException(String msg){
+        super(msg);
+    }
 }

@@ -8,5 +8,5 @@ import domain.RpcRequest;
  */
 public interface RpcClient {
 
-    public Object sendRequest(RpcRequest request,String host,int port);
+    public Object sendRequest(RpcRequest request);
 }

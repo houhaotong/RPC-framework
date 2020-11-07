@@ -1,6 +1,6 @@
 package com.hht.rpc.server.socket;
 
-import com.hht.rpc.registry.ServerRegistry;
+import com.hht.rpc.provider.ServiceProvider;
 import com.hht.rpc.server.RequestHandler;
 import domain.RpcRequest;
 import domain.RpcResponse;
@@ -19,11 +19,11 @@ public class WorkThread implements Runnable {
 
     private Socket socket;
 
-    private final ServerRegistry registry;
+    private final ServiceProvider registry;
 
     private final RequestHandler handler;
 
-    public WorkThread(Socket socket,ServerRegistry registry,RequestHandler handler){
+    public WorkThread(Socket socket, ServiceProvider registry, RequestHandler handler){
         this.socket=socket;
         this.registry=registry;
         this.handler=handler;

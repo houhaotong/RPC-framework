@@ -1,11 +1,10 @@
 package com.hht.test;
 
 import com.hht.rpc.HelloService;
-import com.hht.rpc.registry.DefaultServerRegistry;
-import com.hht.rpc.registry.ServerRegistry;
+import com.hht.rpc.provider.ServiceProviderImpl;
+import com.hht.rpc.provider.ServiceProvider;
 import com.hht.rpc.server.RpcServer;
 import com.hht.rpc.server.netty.NettyServer;
-import com.hht.rpc.server.socket.SocketServer;
 
 /**
  * @author hht
@@ -14,10 +13,9 @@ import com.hht.rpc.server.socket.SocketServer;
 public class testServer {
 
     public static void main(String[] args) {
-        RpcServer server=new NettyServer();
+        RpcServer server=new NettyServer("127.0.0.1",8888);
         HelloService service=new HelloServiceImpl();
-        ServerRegistry registry=new DefaultServerRegistry();
-        registry.register(service);
-        server.start(registry,8888);
+        server.publishService(service,HelloService.class);
+        server.start();
     }
 }

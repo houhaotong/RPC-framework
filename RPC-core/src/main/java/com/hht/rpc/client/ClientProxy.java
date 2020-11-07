@@ -37,7 +37,7 @@ public class ClientProxy implements InvocationHandler {
                 .parameters(args)
                 .parameterTypes(method.getParameterTypes())
                 .build();
-        RpcResponse response = (RpcResponse) client.sendRequest(rpcRequest, host, port);
+        RpcResponse response = (RpcResponse) client.sendRequest(rpcRequest);
         if(response==null){
             throw new RpcException(RpcError.BAD_SERVER);
         }
