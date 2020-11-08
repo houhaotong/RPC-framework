@@ -24,7 +24,7 @@ import java.net.InetSocketAddress;
 @Slf4j
 public class NettyServer implements RpcServer {
 
-    private final ServerRegistry serverRegistry=new ZookeeperServerRegistry();
+    private final ServerRegistry serverRegistry;
 
     private final int port;
 
@@ -32,9 +32,10 @@ public class NettyServer implements RpcServer {
 
     private final ServiceProvider provider=new ServiceProviderImpl();
 
-    public NettyServer(String host,int port){
+    public NettyServer(String host,int port,ServerRegistry registry){
         this.host=host;
         this.port=port;
+        this.serverRegistry=registry;
     }
 
     @Override

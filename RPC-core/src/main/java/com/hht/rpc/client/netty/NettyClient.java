@@ -22,7 +22,11 @@ import java.net.InetSocketAddress;
 @Slf4j
 public class NettyClient implements RpcClient {
 
-    private final ServerRegistry registry = new ZookeeperServerRegistry();
+    private final ServerRegistry registry ;
+
+    public NettyClient(ServerRegistry registry){
+        this.registry=registry;
+    }
 
     @Override
     public Object sendRequest(RpcRequest request) {
