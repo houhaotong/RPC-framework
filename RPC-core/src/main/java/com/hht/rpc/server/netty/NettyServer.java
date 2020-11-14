@@ -1,10 +1,9 @@
 package com.hht.rpc.server.netty;
 
-import com.hht.rpc.provider.ServiceProvider;
+import com.hht.rpc.hooks.closeHook;
 import com.hht.rpc.provider.ServiceProviderImpl;
 import com.hht.rpc.registry.ServerRegistry;
-import com.hht.rpc.registry.ZookeeperServerRegistry;
-import com.hht.rpc.server.RpcServer;
+import com.hht.rpc.server.AbstractRpcServer;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelOption;
@@ -22,24 +21,21 @@ import java.net.InetSocketAddress;
  * @date 2020/11/3 16:11
  */
 @Slf4j
-public class NettyServer implements RpcServer {
-
-    private final ServerRegistry serverRegistry;
-
-    private final int port;
-
-    private final String host;
-
-    private final ServiceProvider provider=new ServiceProviderImpl();
+public class NettyServer extends AbstractRpcServer {
 
     public NettyServer(String host,int port,ServerRegistry registry){
         this.host=host;
         this.port=port;
         this.serverRegistry=registry;
+        this.serviceProvider=new ServiceProviderImpl();
+        //初始化时扫描服务
+        scanServices();
     }
 
     @Override
     public void start() {
+        //启动时添加钩子
+        closeHook.getInstance().addClearHook();
         EventLoopGroup boss = new NioEventLoopGroup();
         EventLoopGroup worker = new NioEventLoopGroup();
         ServerBootstrap b=new ServerBootstrap();
@@ -59,17 +55,5 @@ public class NettyServer implements RpcServer {
             boss.shutdownGracefully();
             worker.shutdownGracefully();
         }
-    }
-
-    /**
-     * 推送服务
-     * @param service 服务
-     */
-    @Override
-    public void publishService(Object service,Class<?> serviceClazz) {
-        //添加服务
-        provider.addService(service);
-        //注册服务到注册中心
-        serverRegistry.register(serviceClazz.getCanonicalName(),new InetSocketAddress(host,port));
     }
 }

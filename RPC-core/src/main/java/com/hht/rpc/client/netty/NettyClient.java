@@ -3,8 +3,11 @@ package com.hht.rpc.client.netty;
 import com.hht.rpc.client.RpcClient;
 import com.hht.rpc.registry.ServerRegistry;
 import com.hht.rpc.registry.ZookeeperServerRegistry;
+import com.hht.rpc.registry.serverdiscover.NacosServerDiscovery;
+import com.hht.rpc.registry.serverdiscover.ServerDiscovery;
 import domain.RpcRequest;
 import domain.RpcResponse;
+import enums.LoadBalanceType;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -22,19 +25,20 @@ import java.net.InetSocketAddress;
 @Slf4j
 public class NettyClient implements RpcClient {
 
-    private final ServerRegistry registry ;
+    private final ServerDiscovery discovery;
 
-    public NettyClient(ServerRegistry registry){
-        this.registry=registry;
+    public NettyClient(ServerDiscovery discovery){
+        this.discovery=discovery;
     }
 
     @Override
     public Object sendRequest(RpcRequest request) {
         EventLoopGroup group = new NioEventLoopGroup();
         Bootstrap b = new Bootstrap();
-        InetSocketAddress address = registry.discover(request.getInterfaceName());
+        InetSocketAddress address = discovery.discover(request.getInterfaceName());
         String host = address.getHostName();
         int port = address.getPort();
+        log.info("从{}:{}调用服务",host,port);
         try {
             b.group(group)
                     .channel(NioSocketChannel.class)

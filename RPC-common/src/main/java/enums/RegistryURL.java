@@ -6,7 +6,8 @@ package enums;
  */
 public enum RegistryURL {
 
-    ZKADDRESS("127.0.0.1:2181");
+    ZKADDRESS("127.0.0.1:2181"),
+    NACOSADDR("127.0.0.1:8848");
 
     RegistryURL(String url){
         this.url=url;

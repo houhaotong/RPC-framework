@@ -46,29 +46,4 @@ public class ZookeeperServerRegistry implements ServerRegistry {
         log.info("----创建临时节点:{}",addressPath);
         log.info("{}服务注册成功！",serviceName);
     }
-
-    @Override
-    public InetSocketAddress discover(String serviceName) {
-        String servicePath="/registry/"+serviceName;
-        if(!zkClient.exists(servicePath)){
-            throw new RpcException("找不到对应节点:"+servicePath);
-        }
-        List<String> children = zkClient.getChildren(servicePath);
-        if(children.size()==0){
-            throw new RpcException("未找到address节点");
-        }
-        String addressPath;
-        if (children.size()==1){
-            addressPath=children.get(0);
-            log.info("获取到唯一address节点地址:{}",addressPath);
-        }else {
-            //随机获取一个服务提供地址
-            addressPath=children.get(ThreadLocalRandom.current().nextInt(children.size()));
-            log.info("随机获取到一个address节点地址:{}",addressPath);
-        }
-        //完整的address节点的地址
-        addressPath=servicePath+"/"+addressPath;
-        //读取address结点的数据
-        return zkClient.readData(addressPath);
-    }
 }

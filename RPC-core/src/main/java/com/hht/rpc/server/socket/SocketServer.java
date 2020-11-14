@@ -2,6 +2,7 @@ package com.hht.rpc.server.socket;
 
 import com.hht.rpc.provider.ServiceProvider;
 import com.hht.rpc.provider.ServiceProviderImpl;
+import com.hht.rpc.server.AbstractRpcServer;
 import com.hht.rpc.server.RequestHandler;
 import com.hht.rpc.server.RpcServer;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +19,7 @@ import java.util.concurrent.*;
  * @date 2020/10/28 20:35
  */
 @Slf4j
-public class SocketServer implements RpcServer {
+public class SocketServer extends AbstractRpcServer {
 
     private final ExecutorService threadPool;
 
@@ -63,7 +64,6 @@ public class SocketServer implements RpcServer {
         }
     }
 
-    @Override
     public void publishService(Object service,Class<?> serviceClazz) {
         provider.addService(service);
     }

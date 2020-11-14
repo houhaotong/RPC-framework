@@ -12,5 +12,5 @@ public interface RpcServer {
 
     public void start();
 
-    public void publishService(Object service,Class<?> serviceClazz);
+    public void publishService(Object service,String serviceName);
 }

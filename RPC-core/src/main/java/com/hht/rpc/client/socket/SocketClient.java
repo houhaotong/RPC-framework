@@ -3,8 +3,11 @@ package com.hht.rpc.client.socket;
 import com.hht.rpc.client.RpcClient;
 import com.hht.rpc.registry.ServerRegistry;
 import com.hht.rpc.registry.ZookeeperServerRegistry;
+import com.hht.rpc.registry.serverdiscover.NacosServerDiscovery;
+import com.hht.rpc.registry.serverdiscover.ServerDiscovery;
 import domain.RpcRequest;
 import domain.RpcResponse;
+import enums.LoadBalanceType;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;
@@ -18,11 +21,11 @@ import java.net.Socket;
 @Slf4j
 public class SocketClient implements RpcClient {
 
-    private final ServerRegistry registry=new ZookeeperServerRegistry();
+    private final ServerDiscovery discovery=new NacosServerDiscovery(LoadBalanceType.RANDOM);
 
     @Override
     public Object sendRequest(RpcRequest request){
-        InetSocketAddress address = registry.discover(request.getInterfaceName());
+        InetSocketAddress address = discovery.discover(request.getInterfaceName());
         String host = address.getHostName();
         int port=address.getPort();
         //通过socket与服务端建立连接

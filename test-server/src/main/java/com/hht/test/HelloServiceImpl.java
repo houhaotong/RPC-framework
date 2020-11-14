@@ -2,6 +2,7 @@ package com.hht.test;
 
 import com.hht.rpc.HelloObj;
 import com.hht.rpc.HelloService;
+import com.hht.rpc.anno.Service;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -9,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
  * @date 2020/10/28 22:14
  */
 @Slf4j
+@Service(name = "helloService")
 public class HelloServiceImpl implements HelloService {
     @Override
     public String hello(HelloObj helloObj) {
